@@ -26,7 +26,7 @@ from dateutil import parser
 # print(mentions_ref)
 
 
-news = pd.read_excel(r'test_data.xlsx')
+news = pd.read_csv(r'CCTV_update_data.csv')
 
 
 # ## 2.2 Import the Built-In Function
@@ -37,7 +37,7 @@ news = pd.read_excel(r'test_data.xlsx')
 def parse_cctv(df):
 
     # start_date = df.iloc[-1]['Date']
-    start_date = '20211124'
+    start_date = datetime.date.today().strftime('%Y%m%d')
     start_date_list = start_date.split('-')
     start_date = "".join(start_date_list)
 
@@ -160,7 +160,7 @@ def parse_cctv(df):
 
     news_appear_merge = news_appear_merge.drop(columns='index')
 
-    news_appear_merge = news_appear_merge.drop(columns='Unnamed: 0')
+    # news_appear_merge = news_appear_merge.drop(columns='Unnamed: 0')
 
 
     return news_appear_merge
@@ -174,21 +174,21 @@ def parse_cctv(df):
 news = parse_cctv(news)
 # print(news)
 
-def write_to_firebase(df):
-    mentions_dict = df.to_dict(orient='records')
-    for row in mentions_dict:
-        date = datetime.datetime.strptime(row['Date'], '%Y-%m-%d')
-        date_str = date.strftime('%B %d, %Y')
-        new_dict = {u'date': row['Date']}
-        # print(date_str)
-        for key in row:
-            if key != 'Date':
-                # print(key)
-                new_dict[key] = row[key]
-
-        # print(new_dict)
-        doc_ref = db.collection(u'cctv_mentions').document(date_str)
-        doc_ref.set(new_dict)
+# def write_to_firebase(df):
+#     mentions_dict = df.to_dict(orient='records')
+#     for row in mentions_dict:
+#         date = datetime.datetime.strptime(row['Date'], '%Y-%m-%d')
+#         date_str = date.strftime('%B %d, %Y')
+#         new_dict = {u'date': row['Date']}
+#         # print(date_str)
+#         for key in row:
+#             if key != 'Date':
+#                 # print(key)
+#                 new_dict[key] = row[key]
+#
+#         # print(new_dict)
+#         doc_ref = db.collection(u'cctv_mentions').document(date_str)
+#         doc_ref.set(new_dict)
 
 
 
@@ -197,5 +197,5 @@ def write_to_firebase(df):
 # In[79]:
 
 
-news.to_csv(r'/Users/chrisroche/Desktop/POLITICS 2022/data/CCTV_update_data.csv', index=False)
-write_to_firebase(news)
+news.to_csv(r'CCTV_update_data.csv', index=False)
+# write_to_firebase(news)
