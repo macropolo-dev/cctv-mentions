@@ -13,10 +13,6 @@ import bs4, requests, sys
 import scrapy
 #import re
 import datetime
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-from dateutil import parser
 
 # # Use a service account
 # cred = credentials.Certificate('cctv-mentions-400547157f63.json')
