@@ -34,6 +34,7 @@ def parse_cctv(df):
 
     # start_date = df.iloc[-1]['Date']
     start_date = datetime.date.today().strftime('%Y%m%d')
+    # start_date = '20210801'
     start_date_list = start_date.split('-')
     start_date = "".join(start_date_list)
 
