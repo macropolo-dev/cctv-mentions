@@ -13,6 +13,13 @@ import bs4, requests, sys
 import scrapy
 #import re
 import datetime
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+options = webdriver.ChromeOptions()
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--incognito')
+options.add_argument('--headless')
+driver = webdriver.Chrome(os.getcwd() + '/chromedriver_linux')
 
 # # Use a service account
 # cred = credentials.Certificate('cctv-mentions-400547157f63.json')
@@ -80,10 +87,13 @@ def parse_cctv(df):
             news_day = d[6:]
             url_date = 'https://cn.govopendata.com/xinwenlianbo/{}/'.format(d)
             print(url_date)
-            res = requests.get(url_date, headers = headers_chrome)
-            soup = BeautifulSoup(res.content)
+            # res = requests.get(url_date, headers = headers_chrome)
+            res = driver.get(url_date)
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            # soup = BeautifulSoup(res.content)
             headline = soup.find_all('h2', class_ = 'h4')
             content = soup.find_all('p')
+            print(content)
 
             for i in range(len(headline)):
                 date_df.loc[i, 'date'] = datetime.datetime(int(news_year), int(news_month), int(news_day))
