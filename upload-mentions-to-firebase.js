@@ -3,8 +3,8 @@ const CSVToJSON = require('csvtojson');
 // Required for side-effects
 require("firebase/firestore");
 
-const DATABASE_STR = 'committee-dev-78cf7';
-// const DATABASE_STR = 'committee-updates-7bc6a';
+// const DATABASE_STR = 'committee-dev-78cf7';
+const DATABASE_STR = 'committee-updates-7bc6a';
 
 // Initialize Cloud Firestore through Firebase
 // firebase.initializeApp({
