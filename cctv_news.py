@@ -72,7 +72,7 @@ def parse_cctv(df):
 
     # start_date, end_Date should be like str ‘20160601’ or the datetime format
     date_list=[datetime.datetime.strftime(x,'%Y%m%d') for x in list(pd.date_range(start = start_date, end = end_date))]
-    print(date_list)
+    # print(date_list)
     news_df = pd.DataFrame()
     no_list = []
 
@@ -86,31 +86,35 @@ def parse_cctv(df):
             news_month = d[4:6]
             news_day = d[6:]
             url_date = 'https://cn.govopendata.com/xinwenlianbo/{}/'.format(d)
-            print(url_date)
-            res = requests.get(url_date, headers = headers_chrome)
-            # res = driver.get(url_date)
+            # print(url_date)
+            # res = requests.get(url_date, headers = headers_chrome)
+            # res = pd.read_html(r'cctv-mentions-today.html')
+            # print(res)
             # soup = BeautifulSoup(driver.page_source, 'html.parser')
-            soup = BeautifulSoup(res.content)
-            headline = soup.find_all('h2', class_ = 'h4')
-            content = soup.find_all('p')
-            print(content)
+            with open(r"cctv-mentions-today.html") as fp:
+                soup = BeautifulSoup(fp, 'html.parser')
+                # print(soup)
+                # soup = BeautifulSoup(pd.read_html(r'cctv-mentions-today.html'))
+                headline = soup.find_all('h2', class_ = 'h4')
+                content = soup.find_all('p')
+                print(content)
 
-            for i in range(len(headline)):
-                date_df.loc[i, 'date'] = datetime.datetime(int(news_year), int(news_month), int(news_day))
-                date_df.loc[i, 'year-month'] = news_year + '-' + news_month
-                date_df.loc[i, 'year'] = news_year
-                date_df.loc[i, 'month'] = news_month
-                date_df.loc[i, 'day'] = news_day
-                date_df.loc[i, 'series'] = i+1
-                date_df.loc[i, 'headline'] = headline[i].text
-                date_df.loc[i, 'content'] = content[i].text
+                for i in range(len(headline)):
+                    date_df.loc[i, 'date'] = datetime.datetime(int(news_year), int(news_month), int(news_day))
+                    date_df.loc[i, 'year-month'] = news_year + '-' + news_month
+                    date_df.loc[i, 'year'] = news_year
+                    date_df.loc[i, 'month'] = news_month
+                    date_df.loc[i, 'day'] = news_day
+                    date_df.loc[i, 'series'] = i+1
+                    date_df.loc[i, 'headline'] = headline[i].text
+                    date_df.loc[i, 'content'] = content[i].text
 
-            news_df = news_df.append(date_df)
+                news_df = news_df.append(date_df)
             # print(news_df)
             #print('News for {} has been successfully parsed!'.format(d))
 
         except:
-            # print('You should manually add news for {}'.format(d))
+            print('You should manually add news for {}'.format(d))
             no_list.append(d)
 
     news_df = news_df.sort_values(by = ['date', 'series'], ascending = [False, True]) # ranking based on dates
